@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'geolocator.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -31,9 +33,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   void getLocation() async {
+    determinePosition();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.low);
-    print('${position.latitude}  + ${position.latitude}');
+    print('hello world ${position.latitude}  + ${position.longitude}');
   }
 
   @override
@@ -42,23 +45,66 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.redAccent,
+              child: const Center(
+                child: Text(
+                  '25"',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
-            // Text(
-            //   '${this.}',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
-          ],
-        ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              color: Colors.amber,
+              child: Column(
+                children: [
+                  Row(
+                    children: const [
+                      Expanded(
+                        child: Text('18"'),
+                      ),
+                      Expanded(
+                        child: Text('25"'),
+                      ),
+                      Expanded(
+                        child: Text('27"'),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: const [
+                      Expanded(
+                        child: Text('min"'),
+                      ),
+                      Expanded(
+                        child: Text('current"'),
+                      ),
+                      Expanded(
+                        child: Text('max"'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              
+            ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          getLocation;
+          getLocation();
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
