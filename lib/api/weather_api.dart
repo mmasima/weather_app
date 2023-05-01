@@ -1,12 +1,22 @@
-// import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:http/http.dart';
 
-// void main() async {
-//   var url = Uri.parse('https://api.openweathermap.org/data/3.0/onecall?lat={-25.9991783}&lon={-28.1262917}&appid={29da89f167ed80b4f85074fa831cd668}');
-//   var response = await http.get(url);
+import '../models/wather_model.dart';
 
-//   if (response.statusCode == 200) {
-//     print(response.body);
-//   } else {
-//     print('Request failed with status: ${response.statusCode}.');
-//   }
-// }
+class WeatherApi {
+  final Uri postsURL = Uri.parse(
+      "https://api.openweathermap.org/data/3.0/onecall?lat=28.0473&lon=-26.2041&appid=");
+
+  Future<WeatherModel> getWeather() async {
+    Response res = await get(postsURL);
+
+    if (res.statusCode == 200) {
+      print('backend ${res}');
+      return WeatherModel.fromJson(res as Map<String, dynamic>);
+
+    } else {
+      print('Request failed with status: ${res.statusCode}.');
+      throw "Unable to retrieve posts.";
+    }
+  }
+}

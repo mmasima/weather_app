@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/cubit/weather_cubit.dart';
 
+import 'api/weather_api.dart';
 import 'geolocator.dart';
+import 'models/wather_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +36,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    getLocation();
+    super.initState();
+  }
+
   void getLocation() async {
     determinePosition();
     Position position = await Geolocator.getCurrentPosition(
@@ -42,68 +52,25 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.redAccent,
-              child: const Center(
-                child: Text(
-                  '25"',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              color: Colors.amber,
-              child: Column(
-                children: [
-                  Row(
-                    children: const [
-                      Expanded(
-                        child: Text('18"'),
-                      ),
-                      Expanded(
-                        child: Text('25"'),
-                      ),
-                      Expanded(
-                        child: Text('27"'),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: const [
-                      Expanded(
-                        child: Text('min"'),
-                      ),
-                      Expanded(
-                        child: Text('current"'),
-                      ),
-                      Expanded(
-                        child: Text('max"'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              
-            ),
-          )
-        ],
+      body: BlocBuilder<WeatherCubit, WeatherState>(
+        builder: (context, state) {
+          if (state is WeatherLoaded) {
+            return weatherScreen();
+          } else if (state is WeatherLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return const SnackBar(
+              content: Text('Error loading weather Api'),
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          final WeatherModel result = await WeatherApi().getWeather();
+          print("frontend ${result}");
           getLocation();
         },
         tooltip: 'Increment',
@@ -111,4 +78,105 @@ class _MyHomePageState extends State<MyHomePage> {
       ), //
     );
   }
+}
+
+Widget weatherScreen() {
+  return Column(
+    children: [
+      Expanded(
+        flex: 1,
+        child: Container(
+          color: Colors.redAccent,
+          child: const Center(
+            child: Text(
+              '25"',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 60,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: Container(
+          color: Colors.amber,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'min"',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text(
+                      'current"',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: const [
+                        Text(
+                          'max"',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text('18"'),
+                    Text('25"'),
+                    Text('27"'),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Colors.black,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'min"',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'current"',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'max"',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      )
+    ],
+  );
 }
