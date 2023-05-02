@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:http/http.dart';
 
 import '../models/wather_model.dart';
@@ -11,7 +10,7 @@ class WeatherApi {
     Response res = await get(postsURL);
 
     if (res.statusCode == 200) {
-      print('backend ${res}');
+      print('backend $res');
       return WeatherModel.fromJson(res as Map<String, dynamic>);
 
     } else {

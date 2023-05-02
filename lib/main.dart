@@ -2,28 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/cubit/weather_cubit.dart';
+import 'package:weather_app/repo/weather_repo.dart';
 
 import 'api/weather_api.dart';
 import 'geolocator.dart';
 import 'models/wather_model.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  late final WeatherRepo _weatherRepo;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: BlocProvider(
+          create: (context) => WeatherCubit(_weatherRepo),
+          child: MyHomePage(title: 'Flutter Demo Home Page'),
+        ));
   }
 }
 
@@ -54,12 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: BlocBuilder<WeatherCubit, WeatherState>(
         builder: (context, state) {
-          if (state is WeatherLoaded) {
-            return weatherScreen();
-          } else if (state is WeatherLoading) {
+          if (state is WeatherLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          } else if (state is WeatherLoaded) {
+            return weatherScreen();
           } else {
             return const SnackBar(
               content: Text('Error loading weather Api'),
