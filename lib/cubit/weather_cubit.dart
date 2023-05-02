@@ -8,9 +8,11 @@ part 'weather_state.dart';
 class WeatherCubit extends Cubit<WeatherState> {
   final WeatherRepo _weatherRepo;
 
-  WeatherCubit(this._weatherRepo) : super(const WeatherInitial());
+  WeatherCubit({required WeatherRepo weatherRepo})
+      : _weatherRepo = weatherRepo,
+        super(const WeatherLoading());
 
-  Future<void> getWeather(String cityName) async {
+  Future<void> getWeather({required String  lat,required String lng}) async {
     try {
       emit(const WeatherLoading());
       final WeatherModel weather = await _weatherRepo.getWeather();

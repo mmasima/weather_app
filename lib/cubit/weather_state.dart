@@ -4,12 +4,12 @@ abstract class WeatherState {
   const WeatherState();
 }
 
-class WeatherInitial extends WeatherState {
-  const WeatherInitial();
-}
 
 class WeatherLoading extends WeatherState {
   const WeatherLoading();
+
+  @override
+  List<Object> get props => [];
 }
 
 class WeatherLoaded extends WeatherState {
@@ -27,12 +27,5 @@ class WeatherError extends WeatherState {
   const WeatherError(this.message);
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is WeatherError && o.message == message;
-  }
-
-  @override
-  int get hashCode => message.hashCode;
+  List<Object> get props => [];
 }
