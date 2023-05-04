@@ -6,17 +6,16 @@ import 'package:weather_app/cubit/weather_cubit.dart';
 import 'package:weather_app/repo/weather_repo.dart';
 import 'package:weather_app/services/service_locator.dart';
 
-import 'api/weather_api.dart';
 import 'geolocator.dart';
 import 'models/wather_model.dart';
 
 void main() {
   serviceLocatorInit();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -43,15 +42,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late WeatherCubit _weatherCubit;
-  late Position position;
+  Position? position;
   @override
-  void initState() async {
-    position = await getLocation();
-    _weatherCubit = WeatherCubit(
-      weatherRepo: GetIt.instance.get<WeatherRepo>(),
-    );
+  void initState() {
+    getLocation();
 
-    _loadWeatherDeatials();
     super.initState();
   }
 
@@ -61,28 +56,35 @@ class _MyHomePageState extends State<MyHomePage> {
     _weatherCubit.close();
   }
 
-  Future<void> _loadWeatherDeatials() {
-    final weatherCubit = BlocProvider.of<WeatherCubit>(context);
-
-    return weatherCubit.getWeather(
-        lat: position.latitude.toString(),
-        lng: position.longitude.toString());
+  Future<void> getLocation() async {
+    determinePosition();
+    Position pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
+    setState(() {
+      position = pos;
+    });
   }
 
-  Future<Position> getLocation() async {
-    determinePosition();
-    position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
-    return position;
+  Future<void> _loadWeatherDeatials() async {
+    final weatherCubit = BlocProvider.of<WeatherCubit>(context);
+    return weatherCubit.getWeather(
+        lat: position?.latitude.toString() ?? '',
+        lng: position?.longitude.toString() ?? '');
   }
 
   @override
   Widget build(BuildContext context) {
+    if (position != null) {
+      _loadWeatherDeatials();
+    }
     return Scaffold(
       body: BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
         if (state is WeatherLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Container(
+            color: const Color(0xFF54717A),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         } else if (state is WeatherLoaded) {
           return weatherScreen(state.weather, state.getWeatherMain);
@@ -91,15 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text('Error loading weather Api'),
           );
         }
-      }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final WeatherModel result = await WeatherApi().getWeather();
-          getLocation();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), //
+      }), //
     );
   }
 }
@@ -107,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
 Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
   final String mainWeather = getWeatherMain;
   final Color hexCode;
-  if (mainWeather == 'sunny') {
+  if (mainWeather == 'sun') {
     hexCode = const Color(0xFF47AB2F);
   } else if (mainWeather == 'clouds') {
     hexCode = const Color(0xFF54717A);
@@ -160,15 +154,17 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'min"',
+                      'min',
                       style: TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
                     const Text(
-                      'current"',
+                      'current',
                       style: TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -176,8 +172,9 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                     Row(
                       children: const [
                         Text(
-                          'max"',
+                          'max',
                           style: TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -192,18 +189,21 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                     Text(
                       '${weather.daily![0].temp!.min!.toInt()}º',
                       style: const TextStyle(
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
                     Text(
                       '${weather.current!.temp!.toInt()}º',
                       style: const TextStyle(
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
                     Text(
                       '${weather.daily?[0].temp?.max?.toInt()}º',
                       style: const TextStyle(
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
@@ -213,26 +213,28 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                 const Divider(
                   height: 1,
                   thickness: 1,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 const SizedBox(height: 20),
                 ...weather.daily!.asMap().entries.map(
                   (e) {
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: [                          
                           Text(
                             _weekDay(e.value.dt!),
                             style: const TextStyle(
+                              fontSize: 18,
                               color: Colors.white,
                             ),
                           ),
-                          Image.asset('assets/icons/$getWeatherMain.png'),
+                          Image.asset('assets/icons/$getWeatherMain@3x.png'),
                           Text(
                             '${e.value.temp!.day!.toInt()}º',
                             style: const TextStyle(
+                              fontSize: 18,
                               color: Colors.white,
                             ),
                           ),
@@ -251,7 +253,7 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
 }
 
 String _weekDay(DateTime weekday) {
-  switch (weekday.day) {
+  switch (weekday.weekday) {
     case 1:
       return 'Monday';
     case 2:
