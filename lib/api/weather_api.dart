@@ -6,7 +6,7 @@ import '../models/wather_model.dart';
 
 class WeatherApi {
   final Uri postsURL = Uri.parse(
-      "https://api.openweathermap.org/data/3.0/onecall?lat=28.0473&lon=-26.2041&units=metric&appid=29da89f167ed80b4f85074fa831cd668");
+      "https://api.openweathermap.org/data/2.5/onecall?lat=28.0473&lon=-26.2041&units=metric&appid=29da89f167ed80b4f85074fa831cd668");
 
   Future<WeatherModel> getWeather() async {
     final res = await http.get(postsURL);

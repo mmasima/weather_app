@@ -12,13 +12,25 @@ class WeatherCubit extends Cubit<WeatherState> {
       : _weatherRepo = weatherRepo,
         super(const WeatherLoading());
 
-  Future<void> getWeather({required String  lat,required String lng}) async {
+  Future<void> getWeather({required String lat, required String lng}) async {
     try {
       emit(const WeatherLoading());
       final WeatherModel weather = await _weatherRepo.getWeather();
-      emit(WeatherLoaded(weather: weather));
+      final String getWeatherMain = _getWeatherMain(weather);
+      emit(WeatherLoaded(
+        weather: weather,
+        getWeatherMain: getWeatherMain,
+      ));
     } catch (err) {
       emit(const WeatherError("Couldn't fetch weather. Is the device online?"));
     }
+  }
+
+  String _getWeatherMain(WeatherModel weather) {
+    final String getWeatherMain;
+    getWeatherMain = weather.current!.weather![0].main.toString();
+    String weatherType = getWeatherMain.split('.').last.toLowerCase();
+
+    return weatherType;
   }
 }

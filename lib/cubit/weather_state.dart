@@ -4,7 +4,6 @@ abstract class WeatherState {
   const WeatherState();
 }
 
-
 class WeatherLoading extends WeatherState {
   const WeatherLoading();
 
@@ -14,12 +13,17 @@ class WeatherLoading extends WeatherState {
 
 class WeatherLoaded extends WeatherState {
   final WeatherModel weather;
+  final String getWeatherMain;
   const WeatherLoaded({
     required this.weather,
+    required this.getWeatherMain,
   });
 
   @override
-  List<Object> get props => [weather];
+  List<Object> get props => [
+        weather,
+        getWeatherMain,
+      ];
 }
 
 class WeatherError extends WeatherState {
