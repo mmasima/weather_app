@@ -33,4 +33,11 @@ When you launch the app, it will request permission to access your location. Onc
 
 The app will display the current weather conditions for your location, including the temperature.
 
-please note that the app whas build on an android device and not tested yet on IOS device
+please note that the app whas build on an android device and not tested yet on IOS device.
+
+### references
+
+https://app.quicktype.io/
+https://blog.logrocket.com/implementing-repository-pattern-flutter/
+https://resocoder.com/2020/08/04/flutter-bloc-cubit-tutorial/
+https://www.digitalocean.com/community/tutorials/flutter-flutter-http
