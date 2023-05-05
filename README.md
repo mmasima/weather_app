@@ -1,16 +1,36 @@
-# weather_app
 
-A new Flutter project.
 
-## Getting Started
+## Flutter Weather App using Cubit for State Management and GetIt for Service Locator
 
-This project is a starting point for a Flutter application.
+This Flutter Weather App is a simple project that demonstrates how to use Cubit for state management and GetIt for service locator in a Flutter app. The app uses the OpenWeatherMap API to get the current weather data for the user's current location, which is retrieved using the Geolocator package.
 
-A few resources to get you started if this is your first Flutter project:
+**Note:** To use this app, you will need to obtain an API key from OpenWeatherMap and replace the placeholder `API_KEY` value in the `lib/data/weather_api.dart` file with your own API key.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Getting Started
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To run this app on your local machine, you will need to have Flutter installed. You can download and install Flutter by following the instructions in the [Flutter Documentation](https://flutter.dev/docs/get-started/install).
+
+Once you have Flutter installed, clone this repository and run the following command in the project directory:
+
+```
+flutter pub get
+```
+
+This will download all the dependencies required for this project.
+
+### Running the App
+
+To run the app on an Android device or emulator, run the following command:
+
+```
+flutter run
+```
+
+
+### How to Use the App
+
+When you launch the app, it will request permission to access your location. Once you grant permission, the app will use the Geolocator package to retrieve your current location coordinates and use these coordinates to fetch the current weather data from the OpenWeatherMap API.
+
+The app will display the current weather conditions for your location, including the temperature.
+
+please note that the app whas build on an android device and not tested yet on IOS device
