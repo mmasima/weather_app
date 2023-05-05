@@ -1,6 +1,6 @@
 
 
-## Flutter Weather App using Cubit for State Management and GetIt for Service Locator
+## Flutter Weather App
 
 This Flutter Weather App is a simple project that demonstrates how to use Cubit for state management and GetIt for service locator in a Flutter app. The app uses the OpenWeatherMap API to get the current weather data for the user's current location, which is retrieved using the Geolocator package.
 
