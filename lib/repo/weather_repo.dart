@@ -1,5 +1,3 @@
-import 'package:http/http.dart';
-
 import '../api/weather_api.dart';
 import '../models/wather_model.dart';
 

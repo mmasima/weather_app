@@ -16,7 +16,6 @@ class WeatherCubit extends Cubit<WeatherState> {
     try {
       emit(const WeatherLoading());
       final WeatherModel weather = await _weatherRepo.getWeather(lat, lng);
-      print('hello worldd $weather');
       final String getWeatherMain = _getWeatherMain(weather);
       emit(WeatherLoaded(
         weather: weather,
