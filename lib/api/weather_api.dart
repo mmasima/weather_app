@@ -11,7 +11,7 @@ class WeatherApi {
     String lng,
   ) async {
      final Uri postsURL = Uri.parse(
-      "https://api.openweathermap.org/data/3.0/onecall?lat=$lat&lon=$lng&units=metric&appid=29da89f167ed80b4f85074fa831cd668");
+      "https://api.openweathermap.org/data/3.0/onecall?lat=$lat&lon=$lng&units=metric&appid=");
     final res = await http.get(postsURL);
 
     if (res.statusCode == 200) {

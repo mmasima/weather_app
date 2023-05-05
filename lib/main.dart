@@ -147,13 +147,13 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
         child: Container(
           color: hexCode,
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
+                  children: const [
+                    Text(
                       'min',
                       style: TextStyle(
                         fontSize: 18,
@@ -161,7 +161,7 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                         color: Colors.white,
                       ),
                     ),
-                    const Text(
+                    Text(
                       'current',
                       style: TextStyle(
                         fontSize: 18,
@@ -169,17 +169,13 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                         color: Colors.white,
                       ),
                     ),
-                    Row(
-                      children: const [
-                        Text(
-                          'max',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'max',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
@@ -216,29 +212,40 @@ Widget weatherScreen(WeatherModel weather, String getWeatherMain) {
                   color: Colors.white,
                 ),
                 const SizedBox(height: 20),
-                ...weather.daily!.asMap().entries.map(
+                ...weather.daily!.asMap().entries.take(4).map(
                   (e) {
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [                          
-                          Text(
-                            _weekDay(e.value.dt!),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: SizedBox(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _weekDay(e.value.dt!),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                          Image.asset('assets/icons/$getWeatherMain@3x.png'),
-                          Text(
-                            '${e.value.temp!.day!.toInt()}º',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
+                            Expanded(
+                              child: Image.asset(
+                                  'assets/icons/$getWeatherMain.png',),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Text(
+                                '${e.value.temp!.day!.toInt()}º',
+                                textAlign: TextAlign.end,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
