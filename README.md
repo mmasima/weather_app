@@ -4,7 +4,7 @@
 
 This Flutter Weather App is a simple project that demonstrates how to use Cubit for state management and GetIt for service locator in a Flutter app. The app uses the OpenWeatherMap API to get the current weather data for the user's current location, which is retrieved using the Geolocator package.
 
-**Note:** To use this app, you will need to obtain an API key from OpenWeatherMap and replace the placeholder `API_KEY` value in the `lib/data/weather_api.dart` file with your own API key.
+**Note:** To use this app, you will need to obtain an API key from OpenWeatherMap and add it `lib/data/weather_api.dart` file with your own API key.
 
 ### Getting Started
 
